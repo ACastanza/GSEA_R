@@ -38,7 +38,7 @@ GSEA.get.network <- function(msigdbversion, gene.labels, score.type = "strength"
   # Topology Influence Factor adapted from Hung et al. PMID:20187943
   d <- distances(net_graph)
   set.expression.matrix <- expression.matrix[rownames(d),]
-  pcc <- stats::cor(t(set.expression.matrix), method="pearson", use="pairwise.complete.obs")
+  pcc <- stats::cor(t(set.expression.matrix), method="pearson")#, use="pairwise.complete.obs")
   d <- d[rownames(pcc),rownames(pcc)]
   f <- d/abs(pcc)
   diag(f) <- NA

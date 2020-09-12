@@ -27,7 +27,7 @@ GSEA.get.local.network <- function(global.netowrk, set, score.type = "strength",
   d <- distances(gene.set.graph)
   set.expression.matrix <- expression.matrix[rownames(d), ]
   if (length(set.expression.matrix) > 0) {
-   pcc <- stats::cor(t(set.expression.matrix), method = "pearson", use = "pairwise.complete.obs")
+   pcc <- stats::cor(t(set.expression.matrix), method = "pearson")#, use = "pairwise.complete.obs")
    d <- d[rownames(pcc), rownames(pcc)]
    f <- d/abs(pcc)
    diag(f) <- NA
