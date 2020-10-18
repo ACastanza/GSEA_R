@@ -110,6 +110,10 @@ if (rankmath == 1) {
 
 cat("\n")
 
+usenetwork <- askYesNo("Use Network Weighted Ranking? ")
+
+cat("\n")
+
 outdir <- readline(prompt = ("Drop a directory into R window to use as the output folder or enter directory path: "))
 cat("\n")
 outname <- readline(prompt = ("Enter a prefix to label output files: "))
@@ -157,7 +161,8 @@ GSEA(
  save.intermediate.results = F,           # For experts only, save intermediate results (e.g. matrix of random perm. scores) (default: F)
  use.fast.enrichment.routine = T,         # Use faster routine to compute enrichment for random permutations (default: T)
  gsea.type = rankmethod,                     # Select Standard GSEA (default) or preranked
- rank.metric = rankmetric
+ rank.metric = rankmetric,
+ network = usenetwork
 )
 #----------------------------------------------------------------------------------------------------------
 

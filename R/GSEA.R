@@ -112,7 +112,7 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
  gs.size.threshold.max = 500, reverse.sign = F, preproc.type = 0, random.seed = as.integer(Sys.time()), 
  perm.type = 0, fraction = 1, replace = F, collapse.dataset = FALSE, collapse.mode = "NOCOLLAPSE", 
  save.intermediate.results = F, use.fast.enrichment.routine = T, gsea.type = "GSEA", 
- rank.metric = "S2N") {
+ rank.metric = "S2N", network = TRUE, msigdbversion = "7.2") {
  
  print(" *** Running Gene Set Enrichment Analysis...")
  
@@ -204,6 +204,10 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
   }
   write(paste("fraction =", fraction, sep = " "), file = filename, append = T)
   write(paste("replace =", replace, sep = " "), file = filename, append = T)
+  write(paste("use network scores =", network, sep = " "), file = filename, 
+   append = T)
+  write(paste("MSigDB Version for Network =", msigdbversion, sep = " "), file = filename, 
+   append = T)
  }
  
  # Start of GSEA methodology
@@ -249,11 +253,12 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
    collapseddataset <- collapseddataset[, -1]
    dataset <- collapseddataset
   }
-
-  if (rank.metric == "change"|rank.metric == "signedsig"|rank.metric == "scaledchange") {
+  
+  if (rank.metric == "change" | rank.metric == "signedsig" | rank.metric == 
+   "scaledchange") {
    print(c("Performing Low Count Filtering (Preprocessing Dataset for DESeq2)"))
    dataset <- subset(dataset, rowSums(dataset[]) >= 10)
-	 dataset<-round(dataset)
+   dataset <- round(dataset)
   }
   
   gene.labels <- row.names(dataset)
@@ -308,7 +313,7 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
    A[j, ] <- A[j, col.index]
   }
   names(A) <- sample.names
-	colnames(A) <- sample.names
+  colnames(A) <- sample.names
  } else if (gsea.type == "preranked") {
   dataset <- read.table(input.ds, sep = "\t", header = FALSE, quote = "", stringsAsFactors = FALSE, 
    fill = TRUE)
@@ -479,51 +484,54 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
  }
  if (gsea.type == "GSEA") {
   if (rank.metric == "S2N" | rank.metric == "ttest") {
-  for (nk in 1:n.tot) {
-   call.nperm <- n.perms[nk]
-   
-   print(paste("Computing ranked list for actual and permuted phenotypes.......permutations: ", 
-    n.starts[nk], "--", n.ends[nk], sep = " "))
-   O <- GSEA.GeneRanking(A, class.labels, gene.labels, call.nperm, permutation.type = perm.type, 
-    sigma.correction = "GeneCluster", fraction = fraction, replace = replace, 
-    reverse.sign = reverse.sign, rank.metric, progress = n.starts[nk], total = nperm)
-   gc()
-
-   order.matrix[, n.starts[nk]:n.ends[nk]] <- O$order.matrix
-   correl.matrix[, n.starts[nk]:n.ends[nk]] <- O$rnk.matrix
-   obs.order.matrix[, n.starts[nk]:n.ends[nk]] <- O$obs.order.matrix
-   obs.correl.matrix[, n.starts[nk]:n.ends[nk]] <- O$obs.rnk.matrix
-   rm(O)
-  }}
-  if (rank.metric == "change" | rank.metric == "signedsig" | rank.metric == "scaledchange") {
-  for (nk in 1:n.tot) {
-   call.nperm <- n.perms[nk]
-   
-   print(paste("Computing ranked list for actual and permuted phenotypes.......permutations: ", 
-    n.starts[nk], "--", n.ends[nk], sep = " "))
-     O <- GSEA.SeqRanking(A, class.labels, gene.labels, call.nperm, permutation.type = perm.type, 
-      fraction = fraction, replace = replace, 
-      reverse.sign = reverse.sign, rank.metric, progress = n.starts[nk], total = nperm, stage = "permute")
-   gc()
-
-   order.matrix[, n.starts[nk]:n.ends[nk]] <- O$order.matrix
-   correl.matrix[, n.starts[nk]:n.ends[nk]] <- O$rnk.matrix
-
-   if (fraction < 1) {
+   for (nk in 1:n.tot) {
+    call.nperm <- n.perms[nk]
+    
+    print(paste("Computing ranked list for actual and permuted phenotypes.......permutations: ", 
+      n.starts[nk], "--", n.ends[nk], sep = " "))
+    O <- GSEA.GeneRanking(A, class.labels, gene.labels, call.nperm, permutation.type = perm.type, 
+      sigma.correction = "GeneCluster", fraction = fraction, replace = replace, 
+      reverse.sign = reverse.sign, rank.metric, progress = n.starts[nk], 
+      total = nperm)
+    gc()
+    
     order.matrix[, n.starts[nk]:n.ends[nk]] <- O$order.matrix
     correl.matrix[, n.starts[nk]:n.ends[nk]] <- O$rnk.matrix
+    obs.order.matrix[, n.starts[nk]:n.ends[nk]] <- O$obs.order.matrix
+    obs.correl.matrix[, n.starts[nk]:n.ends[nk]] <- O$obs.rnk.matrix
+    rm(O)
    }
-   rm(O)
   }
+  if (rank.metric == "change" | rank.metric == "signedsig" | rank.metric == 
+   "scaledchange") {
+   for (nk in 1:n.tot) {
+    call.nperm <- n.perms[nk]
+    
+    print(paste("Computing ranked list for actual and permuted phenotypes.......permutations: ", 
+      n.starts[nk], "--", n.ends[nk], sep = " "))
+    O <- GSEA.SeqRanking(A, class.labels, gene.labels, call.nperm, permutation.type = perm.type, 
+      fraction = fraction, replace = replace, reverse.sign = reverse.sign, 
+      rank.metric, progress = n.starts[nk], total = nperm, stage = "permute")
+    gc()
+    
+    order.matrix[, n.starts[nk]:n.ends[nk]] <- O$order.matrix
+    correl.matrix[, n.starts[nk]:n.ends[nk]] <- O$rnk.matrix
+    
+    if (fraction < 1) {
+      order.matrix[, n.starts[nk]:n.ends[nk]] <- O$order.matrix
+      correl.matrix[, n.starts[nk]:n.ends[nk]] <- O$rnk.matrix
+    }
+    rm(O)
+   }
    if (fraction == 1) {
-      O <- GSEA.SeqRanking(A, class.labels, gene.labels, call.nperm, permutation.type = perm.type, 
-       fraction = fraction, replace = replace, 
-       reverse.sign = reverse.sign, rank.metric, progress = n.starts[nk], total = nperm, stage = "rank")
+    O <- GSEA.SeqRanking(A, class.labels, gene.labels, call.nperm, permutation.type = perm.type, 
+      fraction = fraction, replace = replace, reverse.sign = reverse.sign, 
+      rank.metric, progress = n.starts[nk], total = nperm, stage = "rank")
     obs.order.matrix[, 1:nperm] <- O$obs.order.matrix[, 1]
     obs.correl.matrix[, 1:nperm] <- O$obs.rnk.matrix[, 1]
    }
-}
-
+  }
+  
   obs.rnk <- apply(obs.correl.matrix, 1, median)  # using median to assign enrichment scores
   obs.index <- order(obs.rnk, decreasing = T)
   obs.rnk <- sort(obs.rnk, decreasing = T)
@@ -553,15 +561,44 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
   obs.correl.matrix[, 1:nperm] <- obs.rnk
  }
  
+ if (network == TRUE) {
+  
+  # Produce Global Gene Weighting Network
+  net <- GSEA.get.network("7.2", gene.labels)
+  net.weights <- net$weights
+  net.map <- net$map
+  gene.list.weights <- net.weights[gene.labels]
+  names(gene.list.weights) <- gene.labels
+  gene.list.weights[is.na(gene.list.weights)] <- 1
+  
+  gs.weight <- gs
+  for (i in 1:Ng) {
+   print(paste("Computing network weights for gene set:", i, gs.names[i], 
+    sep = " "))
+   gene.set <- gs[i, gs[i, ] != "null"]
+   
+   gs.weight[i, gs[i, ] != "null"] <- GSEA.get.local.network(global.netowrk = net.map, 
+    set = gene.set)
+  }
+ }
+ 
  gene.list2 <- obs.index
+ 
  for (i in 1:Ng) {
   print(paste("Computing observed enrichment for gene set:", i, gs.names[i], 
    sep = " "))
   gene.set <- gs[i, gs[i, ] != "null"]
   gene.set2 <- vector(length = length(gene.set), mode = "numeric")
   gene.set2 <- match(gene.set, gene.labels)
-  GSEA.results <- GSEA.EnrichmentScore(gene.list = gene.list2, gene.set = gene.set2, 
-   weighted.score.type = weighted.score.type, correl.vector = obs.rnk)
+  if (network == TRUE) {
+   gene.set.net <- as.numeric(gs.weight[i, gs[i, ] != "null"])
+   GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = gene.list2, 
+    gene.set = gene.set2, correl.vector = obs.rnk, net.set = gene.set.net, 
+    correl.weight = gene.list.weights)
+  } else {
+   GSEA.results <- GSEA.EnrichmentScore(gene.list = gene.list2, gene.set = gene.set2, 
+    weighted.score.type = weighted.score.type, correl.vector = obs.rnk)
+  }
   Obs.ES[i] <- GSEA.results$ES
   Obs.arg.ES[i] <- GSEA.results$arg.ES
   Obs.RES[i, ] <- GSEA.results$RES
@@ -591,23 +628,60 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
    gene.set <- gs[i, gs[i, ] != "null"]
    gene.set2 <- vector(length = length(gene.set), mode = "numeric")
    gene.set2 <- match(gene.set, gene.labels)
-   for (r in 1:nperm) {
-    gene.list2 <- order.matrix[, r]
-    if (use.fast.enrichment.routine == F) {
-      GSEA.results <- GSEA.EnrichmentScore(gene.list = gene.list2, gene.set = gene.set2, 
-     weighted.score.type = weighted.score.type, correl.vector = correl.matrix[, 
-       r])
-    } else {
-      GSEA.results <- GSEA.EnrichmentScore2(gene.list = gene.list2, gene.set = gene.set2, 
-     weighted.score.type = weighted.score.type, correl.vector = correl.matrix[, 
-       r])
+   if (network == TRUE) {
+    gene.set.net <- as.numeric(gs.weight[i, gs[i, ] != "null"])
+    for (r in 1:nperm) {
+      gene.list2 <- order.matrix[, r]
+      GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = gene.list2, 
+     gene.set = gene.set2, correl.vector = correl.matrix[, r], net.set = gene.set.net, 
+     correl.weight = gene.list.weights)
+      phi[i, r] <- GSEA.results$ES
     }
-    phi[i, r] <- GSEA.results$ES
+   } else {
+    for (r in 1:nperm) {
+      gene.list2 <- order.matrix[, r]
+      if (use.fast.enrichment.routine == F) {
+     GSEA.results <- GSEA.EnrichmentScore(gene.list = gene.list2, 
+       gene.set = gene.set2, weighted.score.type = weighted.score.type, 
+       correl.vector = correl.matrix[, r])
+      } else {
+     GSEA.results <- GSEA.EnrichmentScore2(gene.list = gene.list2, 
+       gene.set = gene.set2, weighted.score.type = weighted.score.type, 
+       correl.vector = correl.matrix[, r])
+      }
+      phi[i, r] <- GSEA.results$ES
+    }
    }
    if (fraction < 1) {
     # if resampling then compute ES for all observed rankings
     for (r in 1:nperm) {
       obs.gene.list2 <- obs.order.matrix[, r]
+      if (network == TRUE) {
+     GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = gene.list2, 
+       gene.set = gene.set2, correl.vector = correl.matrix[, r], net.set = gene.set.net, 
+       correl.weight = gene.list.weights)
+      } else {
+     if (use.fast.enrichment.routine == F) {
+       GSEA.results <- GSEA.EnrichmentScore(gene.list = obs.gene.list2, 
+      gene.set = gene.set2, weighted.score.type = weighted.score.type, 
+      correl.vector = obs.correl.matrix[, r])
+     } else {
+       GSEA.results <- GSEA.EnrichmentScore2(gene.list = obs.gene.list2, 
+      gene.set = gene.set2, weighted.score.type = weighted.score.type, 
+      correl.vector = obs.correl.matrix[, r])
+     }
+      }
+      obs.phi[i, r] <- GSEA.results$ES
+    }
+   } else {
+    # if no resampling then compute only one column (and fill the others with the
+    # same value)
+    obs.gene.list2 <- obs.order.matrix[, 1]
+    if (network == TRUE) {
+      GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = obs.gene.list2, 
+     gene.set = gene.set2, correl.vector = obs.correl.matrix[, r], 
+     net.set = gene.set.net, correl.weight = gene.list.weights)
+    } else {
       if (use.fast.enrichment.routine == F) {
      GSEA.results <- GSEA.EnrichmentScore(gene.list = obs.gene.list2, 
        gene.set = gene.set2, weighted.score.type = weighted.score.type, 
@@ -617,20 +691,6 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
        gene.set = gene.set2, weighted.score.type = weighted.score.type, 
        correl.vector = obs.correl.matrix[, r])
       }
-      obs.phi[i, r] <- GSEA.results$ES
-    }
-   } else {
-    # if no resampling then compute only one column (and fill the others with the
-    # same value)
-    obs.gene.list2 <- obs.order.matrix[, 1]
-    if (use.fast.enrichment.routine == F) {
-      GSEA.results <- GSEA.EnrichmentScore(gene.list = obs.gene.list2, 
-     gene.set = gene.set2, weighted.score.type = weighted.score.type, 
-     correl.vector = obs.correl.matrix[, r])
-    } else {
-      GSEA.results <- GSEA.EnrichmentScore2(gene.list = obs.gene.list2, 
-     gene.set = gene.set2, weighted.score.type = weighted.score.type, 
-     correl.vector = obs.correl.matrix[, r])
     }
     obs.phi[i, 1] <- GSEA.results$ES
     for (r in 2:nperm) {
@@ -650,14 +710,23 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
    gene.set2 <- match(gene.set, gene.labels)
    for (r in 1:nperm) {
     reshuffled.gene.labels <- sample(1:rows)
-    if (use.fast.enrichment.routine == F) {
-      GSEA.results <- GSEA.EnrichmentScore(gene.list = reshuffled.gene.labels, 
-     gene.set = gene.set2, weighted.score.type = weighted.score.type, 
-     correl.vector = obs.rnk)
+    if (network == TRUE) {
+      shuffled.set <- gene.labels[reshuffled.gene.labels[gene.set2]]
+      gene.set.net <- as.numeric(GSEA.get.local.network(global.netowrk = net.map, 
+     set = shuffled.set))
+      GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = reshuffled.gene.labels, 
+     gene.set = gene.set2, correl.vector = obs.rnk, net.set = gene.set.net, 
+     correl.weight = gene.list.weights)
     } else {
-      GSEA.results <- GSEA.EnrichmentScore2(gene.list = reshuffled.gene.labels, 
-     gene.set = gene.set2, weighted.score.type = weighted.score.type, 
-     correl.vector = obs.rnk)
+      if (use.fast.enrichment.routine == F) {
+     GSEA.results <- GSEA.EnrichmentScore(gene.list = reshuffled.gene.labels, 
+       gene.set = gene.set2, weighted.score.type = weighted.score.type, 
+       correl.vector = obs.rnk)
+      } else {
+     GSEA.results <- GSEA.EnrichmentScore2(gene.list = reshuffled.gene.labels, 
+       gene.set = gene.set2, weighted.score.type = weighted.score.type, 
+       correl.vector = obs.rnk)
+      }
     }
     phi[i, r] <- GSEA.results$ES
    }
@@ -665,6 +734,32 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
     # if resampling then compute ES for all observed rankings
     for (r in 1:nperm) {
       obs.gene.list2 <- obs.order.matrix[, r]
+      if (network == TRUE) {
+     GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = gene.list2, 
+       gene.set = gene.set2, correl.vector = correl.matrix[, r], net.set = gene.set.net, 
+       correl.weight = gene.list.weights)
+      } else {
+     if (use.fast.enrichment.routine == F) {
+       GSEA.results <- GSEA.EnrichmentScore(gene.list = obs.gene.list2, 
+      gene.set = gene.set2, weighted.score.type = weighted.score.type, 
+      correl.vector = obs.correl.matrix[, r])
+     } else {
+       GSEA.results <- GSEA.EnrichmentScore2(gene.list = obs.gene.list2, 
+      gene.set = gene.set2, weighted.score.type = weighted.score.type, 
+      correl.vector = obs.correl.matrix[, r])
+     }
+      }
+      obs.phi[i, r] <- GSEA.results$ES
+    }
+   } else {
+    # if no resampling then compute only one column (and fill the others with the
+    # same value)
+    obs.gene.list2 <- obs.order.matrix[, 1]
+    if (network == TRUE) {
+      GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = obs.gene.list2, 
+     gene.set = gene.set2, correl.vector = obs.correl.matrix[, r], 
+     net.set = gene.set.net, correl.weight = gene.list.weights)
+    } else {
       if (use.fast.enrichment.routine == F) {
      GSEA.results <- GSEA.EnrichmentScore(gene.list = obs.gene.list2, 
        gene.set = gene.set2, weighted.score.type = weighted.score.type, 
@@ -674,20 +769,6 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
        gene.set = gene.set2, weighted.score.type = weighted.score.type, 
        correl.vector = obs.correl.matrix[, r])
       }
-      obs.phi[i, r] <- GSEA.results$ES
-    }
-   } else {
-    # if no resampling then compute only one column (and fill the others with the
-    # same value)
-    obs.gene.list2 <- obs.order.matrix[, 1]
-    if (use.fast.enrichment.routine == F) {
-      GSEA.results <- GSEA.EnrichmentScore(gene.list = obs.gene.list2, 
-     gene.set = gene.set2, weighted.score.type = weighted.score.type, 
-     correl.vector = obs.correl.matrix[, r])
-    } else {
-      GSEA.results <- GSEA.EnrichmentScore2(gene.list = obs.gene.list2, 
-     gene.set = gene.set2, weighted.score.type = weighted.score.type, 
-     correl.vector = obs.correl.matrix[, r])
     }
     obs.phi[i, 1] <- GSEA.results$ES
     for (r in 2:nperm) {
@@ -1066,13 +1147,13 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
   }
   if (rank.metric == "scaledchange") {
    x <- plot(location, obs.rnk, ylab = "DESeq2 Log2(FC)", xlab = "Gene List Location", 
-    main = "Gene List Correlation (P-Scaled Log2(FC)) Profile", type = "l", lwd = 2, 
-    cex = 0.9, col = 1)
+    main = "Gene List Correlation (P-Scaled Log2(FC)) Profile", type = "l", 
+    lwd = 2, cex = 0.9, col = 1)
   }
-  if (rank.metric == "signedsig") {  
-   x <- plot(location, obs.rnk, ylab = "DESeq2 Directional -log10(pValue)", xlab = "Gene List Location", 
-    main = "Gene List Correlation (Directional -log10(pValue)) Profile", type = "l", lwd = 2, 
-    cex = 0.9, col = 1)
+  if (rank.metric == "signedsig") {
+   x <- plot(location, obs.rnk, ylab = "DESeq2 Directional -log10(pValue)", 
+    xlab = "Gene List Location", main = "Gene List Correlation (Directional -log10(pValue)) Profile", 
+    type = "l", lwd = 2, cex = 0.9, col = 1)
   }
  } else if (gsea.type == "preranked") {
   x <- plot(location, obs.rnk, ylab = "User Rank Metric", xlab = "Gene List Location", 
@@ -1334,24 +1415,24 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
        "S2N", "RES", "CORE_ENRICHMENT")
       }
       if (rank.metric == "ttest") {
-       names(gene.report) <- c("#", "GENE SYMBOL", "DESC", "LIST LOC", 
-        "TTest", "RES", "CORE_ENRICHMENT")
+     names(gene.report) <- c("#", "GENE SYMBOL", "DESC", "LIST LOC", 
+       "TTest", "RES", "CORE_ENRICHMENT")
       }
       if (rank.metric == "change") {
-       names(gene.report) <- c("#", "GENE SYMBOL", "DESC", "LIST LOC", 
-        "DESeq2 Log2(FC)", "RES", "CORE_ENRICHMENT")
+     names(gene.report) <- c("#", "GENE SYMBOL", "DESC", "LIST LOC", 
+       "DESeq2 Log2(FC)", "RES", "CORE_ENRICHMENT")
       }
       if (rank.metric == "scaledchange") {
-       names(gene.report) <- c("#", "GENE SYMBOL", "DESC", "LIST LOC", 
-        "DESeq2 P-Scaled Log2(FC)", "RES", "CORE_ENRICHMENT")
+     names(gene.report) <- c("#", "GENE SYMBOL", "DESC", "LIST LOC", 
+       "DESeq2 P-Scaled Log2(FC)", "RES", "CORE_ENRICHMENT")
       }
       if (rank.metric == "signedsig") {
-       names(gene.report) <- c("#", "GENE SYMBOL", "DESC", "LIST LOC", 
-        "DESeq2 Directional -log10(pValue)", "RES", "CORE_ENRICHMENT")
+     names(gene.report) <- c("#", "GENE SYMBOL", "DESC", "LIST LOC", 
+       "DESeq2 Directional -log10(pValue)", "RES", "CORE_ENRICHMENT")
       }
     } else if (gsea.type == "preranked") {
-       names(gene.report) <- c("#", "GENE SYMBOL", "DESC", "LIST LOC", 
-       "RNK", "RES", "CORE_ENRICHMENT")
+      names(gene.report) <- c("#", "GENE SYMBOL", "DESC", "LIST LOC", 
+     "RNK", "RES", "CORE_ENRICHMENT")
     }
     
     # print(gene.report)

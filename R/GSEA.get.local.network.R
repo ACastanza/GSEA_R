@@ -1,0 +1,23 @@
+#' Constructs a gene weight network from HumanNet v2 for a gene set
+#'
+#' `GSEA.get.local.network` constructs a network weight table for the genes in a gene set
+#'
+#' Internal `GSEA` function.
+#'
+#' @keywords internal
+#'
+
+GSEA.get.local.network <- function(global.netowrk, set) {
+
+   gene.set.frame <- as.data.frame(set, stringsAsFactors = FALSE)
+   gene.set.map <- merge(x = global.netowrk, y = gene.set.frame, by.x = 2, by.y = 1)
+   gene.set.map <- merge(x = gene.set.map, y = gene.set.frame, by.x = 2, 
+    by.y = 1)
+   gene.set.graph <- graph_from_data_frame(gene.set.map, directed = FALSE)
+   gene.set.weight <- strength(gene.set.graph)
+   gene.set.weight <- gene.set.weight[set]
+   gene.set.weight <- 1+(log(gene.set.weight)/median(log(na.omit(gene.set.weight))))
+   gene.set.weight[is.na(gene.set.weight)] <- 1
+
+ return(unname(as.character(gene.set.weight)))
+}
