@@ -562,7 +562,7 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
  }
  
  if (network == TRUE) {
-  
+  print(paste("Computing global network weights..."))
   # Produce Global Gene Weighting Network
   net <- GSEA.get.network("7.2", gene.labels, score.type = score.type)
   net.weights <- net$weights
