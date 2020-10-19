@@ -158,8 +158,9 @@ GSEA(
  use.fast.enrichment.routine = T,         # Use faster routine to compute enrichment for random permutations (default: T)
  gsea.type = rankmethod,                     # Select Standard GSEA (default) or preranked
  rank.metric = rankmetric,
- network = usenetwork
- # score.type = scoretype
+ network = usenetwork,
+ # score.type = scoretype,
+ msigdbversion = "7.2"
  )
 #----------------------------------------------------------------------------------------------------------
 
