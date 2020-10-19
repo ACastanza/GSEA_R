@@ -4,8 +4,12 @@
 \alias{GSEA.EnrichmentScore2}
 \title{Computes random permutation enrichment scores}
 \usage{
-GSEA.EnrichmentScore2(gene.list, gene.set, weighted.score.type = 1,
-  correl.vector = NULL)
+GSEA.EnrichmentScore2(
+  gene.list,
+  gene.set,
+  weighted.score.type = 1,
+  correl.vector = NULL
+)
 }
 \description{
 `GSEA.EnrichmentScore2` computes the weighted GSEA score of random permutations of a gene.set in gene.list

@@ -4,8 +4,16 @@
 \alias{GSEA.HeatMapPlot}
 \title{Produce Heat Map for Genes in Dataset}
 \usage{
-GSEA.HeatMapPlot(V, row.names = F, col.labels, col.classes,
-  col.names = F, main = " ", xlab = " ", ylab = " ")
+GSEA.HeatMapPlot(
+  V,
+  row.names = F,
+  col.labels,
+  col.classes,
+  col.names = F,
+  main = " ",
+  xlab = " ",
+  ylab = " "
+)
 }
 \description{
 `GSEA.HeatMapPlot` plots a heatmap 'pinkogram' of a gene expression matrix including phenotype vector and gene, sample and phenotype labels

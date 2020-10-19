@@ -44,6 +44,11 @@
 #' @param use.fast.enrichment.routine If true it uses a faster GSEA.EnrichmentScore2 to compute random perm. enrichment
 #' @param gsea.type Mode to run GSEA. Specify either 'GSEA' for standard mode, or 'preranked' to allow parsing of .RNK file
 #' @param rank.metric Method for ranking genes. Accepts either signal-to-noise ratio 'S2N' or 'ttest' (default: S2N)
+#' @param network Use Network weight enhanced Enrichment Score Calcualtions 'TRUE' or 'FALSE' (default: TRUE)
+#' @param msigdbversion Version of MSigDB to use for annotating the gene symbols in the HumanNetv2 derived network 
+#' graph (default: 7.2)
+#' @param score.type method for calcualting the per-gene weighting factors for the gene networks, only strength 
+#' is currently supported (default: strength)
 #' @return The results of the method are stored in the
 #' 'output.directory' specified by the user as part of the input parameters.  The
 #' results files are: - Two tab-separated global result text files (one for each

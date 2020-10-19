@@ -4,8 +4,7 @@
 \alias{GSEA.ConsPlot}
 \title{Plots a heatmap of a consensus matrix}
 \usage{
-GSEA.ConsPlot(V, col.names, main = " ", sub = " ", xlab = " ",
-  ylab = " ")
+GSEA.ConsPlot(V, col.names, main = " ", sub = " ", xlab = " ", ylab = " ")
 }
 \description{
 `GSEA.ConsPlot` plots heatmaps of the consensus matrix from leading edge analysis

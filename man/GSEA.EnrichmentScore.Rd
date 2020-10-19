@@ -4,8 +4,12 @@
 \alias{GSEA.EnrichmentScore}
 \title{Computes the enrichment score of a gene set}
 \usage{
-GSEA.EnrichmentScore(gene.list, gene.set, weighted.score.type = 1,
-  correl.vector = NULL)
+GSEA.EnrichmentScore(
+  gene.list,
+  gene.set,
+  weighted.score.type = 1,
+  correl.vector = NULL
+)
 }
 \description{
 `GSEA.EnrichmentScore` computes the weighted GSEA score of gene.set in gene.list

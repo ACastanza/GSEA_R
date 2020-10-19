@@ -4,10 +4,20 @@
 \alias{GSEA.GeneRanking}
 \title{Ranks genes according to the specified ranking metric}
 \usage{
-GSEA.GeneRanking(A, class.labels, gene.labels, nperm,
-  permutation.type = 0, sigma.correction = "GeneCluster",
-  fraction = 1, replace = F, reverse.sign = F, rank.metric,
-  progress, total)
+GSEA.GeneRanking(
+  A,
+  class.labels,
+  gene.labels,
+  nperm,
+  permutation.type = 0,
+  sigma.correction = "GeneCluster",
+  fraction = 1,
+  replace = F,
+  reverse.sign = F,
+  rank.metric,
+  progress,
+  total
+)
 }
 \description{
 `GSEA.GeneRanking` computes the GSEA ranking metric for each gene in the gene list
@@ -42,9 +52,9 @@ GeneCluster, a choice to support the way it was handled in a previous package)
 fraction: Subsampling fraction. Set to 1.0 (no resampling). For experts only
 (default: 1.0) replace: Resampling mode (replacement or not replacement). For
 experts only (default: F) reverse.sign: Reverse direction of gene list (default
-= F) rank.metric: metric to use for ranking genes, supports "S2N" (signal to 
+= F) rank.metric: metric to use for ranking genes, supports 'S2N' (signal to 
 noise ratio) which ranks by the difference of means scaled by the standard 
-deviation or "ttest" which ranks by the difference of means scaled by the 
+deviation or 'ttest' which ranks by the difference of means scaled by the 
 standard deviation and number of samples Outputs: rnk.matrix: Matrix with 
 random permuted or bootstraps rank metrics signal to noise ratios by default 
 (rows are genes, columns are permutations or bootstrap subsamplings 

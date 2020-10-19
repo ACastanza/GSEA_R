@@ -4,10 +4,20 @@
 \alias{GSEA.SeqRanking}
 \title{Ranks genes according to the specified ranking metric}
 \usage{
-GSEA.SeqRanking(A, class.labels, gene.labels, nperm,
-  permutation.type = 0, sigma.correction = "GeneCluster",
-  fraction = 1, replace = F, reverse.sign = F, rank.metric,
-  progress, total)
+GSEA.SeqRanking(
+  A,
+  class.labels,
+  gene.labels,
+  nperm,
+  permutation.type = 0,
+  fraction = 1,
+  replace = F,
+  reverse.sign = F,
+  rank.metric,
+  progress,
+  total,
+  stage
+)
 }
 \description{
 `GSEA.SeqRanking` computes the GSEA ranking metric for each gene in the gene raw counts matrix using DESeq2
