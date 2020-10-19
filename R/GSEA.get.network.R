@@ -7,7 +7,7 @@
 #' @keywords internal
 #'
 
-GSEA.get.network <- function(msigdbversion, gene.labels) {
+GSEA.get.network <- function(msigdbversion, gene.labels, score.type = "strength") {
  library("igraph")
  net <- read.table(url("https://www.inetbio.org/humannet/networks/HumanNet-XN.tsv"), 
   header = FALSE, stringsAsFactors = FALSE, sep = "\t")
@@ -25,8 +25,13 @@ GSEA.get.network <- function(msigdbversion, gene.labels) {
  net_map = net_map[, c(2, 3, 1)]
  colnames(net_map)[3] <- "LLS"
  net_graph <- graph_from_data_frame(net_map, directed = FALSE, )
- net_weight <- strength(net_graph)
- net_weight <- log(net_weight)/median(log(na.omit(net_weight)))
+ if (score.type == "strength") {
+  net_weight <- strength(net_graph)
+  net_weight <- log(net_weight)/median(log(na.omit(net_weight)))
+ } else if (score.type == "centrality") {
+  net_weight <- eigen_centrality(net_graph)$vector
+  net_weight <- 1 + (log(1 + net_weight)/median(log(na.omit(1 + net_weight))))
+ }
  net_weight <- 1 + net_weight
  return(list(weights = net_weight, map = net_map))
 }

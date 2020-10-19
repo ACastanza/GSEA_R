@@ -112,6 +112,16 @@ cat("\n")
 
 usenetwork <- askYesNo("Use Network Weighted Ranking? ")
 
+if (usenetwork == TRUE) {
+nettype <- menu(c("Strength", "Eigen Centrality"), 
+ graphics = FALSE, title = "Weight Metric for Network Score")
+if (nettype == 1) {
+ scoretype <- "strength"
+} else if (nettype == 2) {
+ scoretype <- "centrality"
+} 
+}
+
 cat("\n")
 
 outdir <- readline(prompt = ("Drop a directory into R window to use as the output folder or enter directory path: "))
@@ -162,7 +172,8 @@ GSEA(
  use.fast.enrichment.routine = T,         # Use faster routine to compute enrichment for random permutations (default: T)
  gsea.type = rankmethod,                     # Select Standard GSEA (default) or preranked
  rank.metric = rankmetric,
- network = usenetwork
+ network = usenetwork,
+ score.type = scoretype
 )
 #----------------------------------------------------------------------------------------------------------
 
