@@ -10,6 +10,7 @@ Description: This is a methodology for the analysis of global molecular profiles
 License: file LICENSE
 RoxygenNote: 7.1.1
 Encoding: UTF-8
+biocViews:
 Imports:
 	dplyr,
 	igraph,

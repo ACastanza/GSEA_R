@@ -3,8 +3,6 @@
 export(GSEA)
 export(GSEA.Analyze.Sets)
 import(dplyr)
-import(DESeq2)
-import(igraph)
 importFrom(grDevices,colors)
 importFrom(grDevices,dev.cur)
 importFrom(grDevices,dev.off)

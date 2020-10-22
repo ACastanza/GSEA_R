@@ -29,6 +29,7 @@ GSEA.get.network <- function(msigdbversion, gene.labels, score.type = "strength"
   {
    net_weight <- strength(net_graph)
    net_weight <- 1 + (log(1 + (net_weight/median(na.omit(net_weight)))))
+  # net_weight <- 1 + ((net_weight-min(net_weight))/(max(net_weight)-min(net_weight)))
   }  #else if (score.type == 'centrality') {
  # net_weight <- eigen_centrality(net_graph)$vector net_weight <- 1 + (log(1 +
  # (net_weight/median(na.omit(net_weight))))) }

@@ -19,6 +19,7 @@ GSEA.get.local.network <- function(global.netowrk, set, score.type = "strength")
    gene.set.weight <- gene.set.weight[set]
    names(gene.set.weight) <- set
    gene.set.weight <- 1 + (log(1 + (gene.set.weight/median(na.omit(gene.set.weight)))))
+  # gene.set.weight <- 1 + ((gene.set.weight-min(gene.set.weight))/(max(gene.set.weight)-min(gene.set.weight)))
   }  #else if (score.type == 'centrality') {
  # gene.set.weight <- eigen_centrality(gene.set.graph)$vector gene.set.weight <-
  # gene.set.weight[set] names(gene.set.weight) <- set gene.set.weight <- 1 +
