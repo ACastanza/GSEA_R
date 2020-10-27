@@ -668,9 +668,15 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
     for (r in 1:nperm) {
       obs.gene.list2 <- obs.order.matrix[, r]
       if (network == TRUE) {
-     GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = gene.list2, 
-       gene.set = gene.set2, correl.vector = correl.matrix[, r], net.set = gene.set.net, 
-       correl.weight = gene.list.weights)
+     if (use.fast.enrichment.routine == F) {
+       GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = gene.list2, 
+      gene.set = gene.set2, correl.vector = correl.matrix[, r], 
+      net.set = gene.set.net, correl.weight = gene.list.weights)
+     } else {
+       GSEA.results <- GSEA.Network.EnrichmentScore2(gene.list = gene.list2, 
+      gene.set = gene.set2, correl.vector = correl.matrix[, r], 
+      net.set = gene.set.net, correl.weight = gene.list.weights)
+     }
       } else {
      if (use.fast.enrichment.routine == F) {
        GSEA.results <- GSEA.EnrichmentScore(gene.list = obs.gene.list2, 
@@ -689,9 +695,15 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
     # same value)
     obs.gene.list2 <- obs.order.matrix[, 1]
     if (network == TRUE) {
-      GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = obs.gene.list2, 
-     gene.set = gene.set2, correl.vector = obs.correl.matrix[, r], 
-     net.set = gene.set.net, correl.weight = gene.list.weights)
+      if (use.fast.enrichment.routine == F) {
+     GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = obs.gene.list2, 
+       gene.set = gene.set2, correl.vector = obs.correl.matrix[, r], 
+       net.set = gene.set.net, correl.weight = gene.list.weights)
+      } else {
+     GSEA.results <- GSEA.Network.EnrichmentScore2(gene.list = obs.gene.list2, 
+       gene.set = gene.set2, correl.vector = obs.correl.matrix[, r], 
+       net.set = gene.set.net, correl.weight = gene.list.weights)
+      }
     } else {
       if (use.fast.enrichment.routine == F) {
      GSEA.results <- GSEA.EnrichmentScore(gene.list = obs.gene.list2, 
@@ -725,9 +737,15 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
       shuffled.set <- gene.labels[reshuffled.gene.labels[gene.set2]]
       gene.set.net <- as.numeric(GSEA.get.local.network(global.netowrk = net.map, 
      set = shuffled.set, score.type = score.type))
-      GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = reshuffled.gene.labels, 
-     gene.set = gene.set2, correl.vector = obs.rnk, net.set = gene.set.net, 
-     correl.weight = gene.list.weights)
+      if (use.fast.enrichment.routine == F) {
+     GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = reshuffled.gene.labels, 
+       gene.set = gene.set2, correl.vector = obs.rnk, net.set = gene.set.net, 
+       correl.weight = gene.list.weights)
+      } else {
+     GSEA.results <- GSEA.Network.EnrichmentScore2(gene.list = reshuffled.gene.labels, 
+       gene.set = gene.set2, correl.vector = obs.rnk, net.set = gene.set.net, 
+       correl.weight = gene.list.weights)
+      }
     } else {
       if (use.fast.enrichment.routine == F) {
      GSEA.results <- GSEA.EnrichmentScore(gene.list = reshuffled.gene.labels, 
@@ -746,9 +764,15 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
     for (r in 1:nperm) {
       obs.gene.list2 <- obs.order.matrix[, r]
       if (network == TRUE) {
-     GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = gene.list2, 
-       gene.set = gene.set2, correl.vector = correl.matrix[, r], net.set = gene.set.net, 
-       correl.weight = gene.list.weights)
+     if (use.fast.enrichment.routine == F) {
+       GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = gene.list2, 
+      gene.set = gene.set2, correl.vector = correl.matrix[, r], 
+      net.set = gene.set.net, correl.weight = gene.list.weights)
+     } else {
+       GSEA.results <- GSEA.Network.EnrichmentScore2(gene.list = gene.list2, 
+      gene.set = gene.set2, correl.vector = correl.matrix[, r], 
+      net.set = gene.set.net, correl.weight = gene.list.weights)
+     }
       } else {
      if (use.fast.enrichment.routine == F) {
        GSEA.results <- GSEA.EnrichmentScore(gene.list = obs.gene.list2, 
@@ -767,9 +791,15 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
     # same value)
     obs.gene.list2 <- obs.order.matrix[, 1]
     if (network == TRUE) {
-      GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = obs.gene.list2, 
-     gene.set = gene.set2, correl.vector = obs.correl.matrix[, r], 
-     net.set = gene.set.net, correl.weight = gene.list.weights)
+      if (use.fast.enrichment.routine == F) {
+     GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = obs.gene.list2, 
+       gene.set = gene.set2, correl.vector = obs.correl.matrix[, r], 
+       net.set = gene.set.net, correl.weight = gene.list.weights)
+      } else {
+     GSEA.results <- GSEA.Network.EnrichmentScore2(gene.list = obs.gene.list2, 
+       gene.set = gene.set2, correl.vector = obs.correl.matrix[, r], 
+       net.set = gene.set.net, correl.weight = gene.list.weights)
+      }
     } else {
       if (use.fast.enrichment.routine == F) {
      GSEA.results <- GSEA.EnrichmentScore(gene.list = obs.gene.list2, 
