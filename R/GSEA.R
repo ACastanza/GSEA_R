@@ -637,9 +637,15 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
     gene.set.net <- as.numeric(gs.weight[i, gs[i, ] != "null"])
     for (r in 1:nperm) {
       gene.list2 <- order.matrix[, r]
-      GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = gene.list2, 
-     gene.set = gene.set2, correl.vector = correl.matrix[, r], net.set = gene.set.net, 
-     correl.weight = gene.list.weights)
+      if (use.fast.enrichment.routine == F) {
+     GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = gene.list2, 
+       gene.set = gene.set2, correl.vector = correl.matrix[, r], net.set = gene.set.net, 
+       correl.weight = gene.list.weights)
+      } else {
+     GSEA.results <- GSEA.Network.EnrichmentScore2(gene.list = gene.list2, 
+       gene.set = gene.set2, correl.vector = correl.matrix[, r], net.set = gene.set.net, 
+       correl.weight = gene.list.weights)
+      }
       phi[i, r] <- GSEA.results$ES
     }
    } else {
