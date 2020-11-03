@@ -8,7 +8,7 @@
 #'
 
 GSEA.get.local.network <- function(global.netowrk, set, score.type = "strength", 
- weighted.score.type) {
+ weighted.score.type, expression.matrix = NULL) {
  
  gene.set.frame <- as.data.frame(set, stringsAsFactors = FALSE)
  gene.set.map <- merge(x = global.netowrk, y = gene.set.frame, by.x = 2, by.y = 1)
@@ -29,12 +29,13 @@ GSEA.get.local.network <- function(global.netowrk, set, score.type = "strength",
  } else if (score.type == "tif") {
   # Topology Influence Factor adapted from Hung et al. PMID:20187943
   d <- distances(gene.set.graph)
-  # pcc <- stats::cor(t(x), method="pearson", use="pairwise.complete.obs")
-  # d <- d[rownames(pcc),rownames(pcc)]
-  # f <- d/abs(pcc)
-  diag(d) <- NA
-  valid <- d <= -log(0.05)
-  f <- as.data.frame(t(d))
+  set.expression.matrix <- expression.matrix[rownames(d),]
+  pcc <- stats::cor(t(set.expression.matrix), method="pearson", use="pairwise.complete.obs")
+  d <- d[rownames(pcc),rownames(pcc)]
+  f <- d/abs(pcc)
+  diag(f) <- NA
+  valid <- f <= -log(0.05)
+  f <- as.data.frame(t(f))
   valid <- as.data.frame(t(valid))
   tif <- unlist(Map(function(x, y) if (sum(y, na.rm = TRUE) > 0) 
    mean(x[y], na.rm = TRUE) else NA, f, valid))
