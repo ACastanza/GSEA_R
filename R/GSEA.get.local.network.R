@@ -36,7 +36,7 @@ GSEA.get.local.network <- function(global.netowrk, set, score.type = "strength",
    mean(x[y], na.rm = TRUE) else NA, f, valid))
   tif <- as.numeric(weighted.score.type) + exp(-tif)
   gene.set.weight <- tif
-}
+ }
  gene.set.weight[is.na(gene.set.weight)] <- as.numeric(weighted.score.type)
  
  return(unname(as.character(gene.set.weight)))
