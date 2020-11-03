@@ -35,6 +35,7 @@ GSEA.get.network <- function(msigdbversion, gene.labels, score.type = "strength"
   net_weight <- eigen_centrality(net_graph)$vector
   net_weight <- as.numeric(weighted.score.type) + (log(1 + (net_weight/median(na.omit(net_weight)))))
  } else if (score.type == "tif") {
+  # Topology Influence Factor adapted from Hung et al. PMID:20187943
   d <- distances(net_graph)
   diag(d) <- NA
   valid <- d <= -log(0.05)

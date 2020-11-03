@@ -27,6 +27,7 @@ GSEA.get.local.network <- function(global.netowrk, set, score.type = "strength",
   names(gene.set.weight) <- set
   gene.set.weight <- as.numeric(weighted.score.type) + (log(1 + (gene.set.weight/median(na.omit(gene.set.weight)))))
  } else if (score.type == "tif") {
+  # Topology Influence Factor adapted from Hung et al. PMID:20187943
   d <- distances(gene.set.graph)
   diag(d) <- NA
   valid <- d <= -log(0.05)
