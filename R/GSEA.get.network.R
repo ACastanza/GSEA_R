@@ -37,6 +37,9 @@ GSEA.get.network <- function(msigdbversion, gene.labels, score.type = "strength"
  } else if (score.type == "tif") {
   # Topology Influence Factor adapted from Hung et al. PMID:20187943
   d <- distances(net_graph)
+  # pcc <- stats::cor(t(x), method="pearson", use="pairwise.complete.obs")
+  # d <- d[rownames(pcc),rownames(pcc)]
+  # f <- d/abs(pcc)
   diag(d) <- NA
   valid <- d <= -log(0.05)
   f <- as.data.frame(t(d))
