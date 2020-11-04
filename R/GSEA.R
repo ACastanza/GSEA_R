@@ -153,7 +153,8 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
    write(paste("gene.ann =", gene.ann, sep = " "), file = filename, append = T)
   }
   if (regexpr(pattern = ".gmt", gs.db[1]) == -1) {
-   # write(paste('gs.db=', gs.db, sep=' '), file=filename, append=T)
+   write(paste('gs.db=', names(gs.db)[1], sep=' '), file=filename, append=T)
+   names(gs.db)<-NULL
   } else {
    write(paste("gs.db =", gs.db, sep = " "), file = filename, append = T)
   }
