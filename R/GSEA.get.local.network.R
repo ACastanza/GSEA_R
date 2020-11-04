@@ -16,15 +16,11 @@ GSEA.get.local.network <- function(global.netowrk, set, score.type = "strength",
  gene.set.graph <- graph_from_data_frame(gene.set.map, directed = FALSE)
  if (score.type == "strength") {
   gene.set.weight <- strength(gene.set.graph)
-  gene.set.weight <- gene.set.weight[set]
-  names(gene.set.weight) <- set
   gene.set.weight <- as.numeric(weighted.score.type) + (log(1 + (gene.set.weight/median(na.omit(gene.set.weight)))))
   # gene.set.weight <- 1 +
   # ((gene.set.weight-min(gene.set.weight))/(max(gene.set.weight)-min(gene.set.weight)))
  } else if (score.type == "centrality") {
   gene.set.weight <- eigen_centrality(gene.set.graph)$vector
-  gene.set.weight <- gene.set.weight[set]
-  names(gene.set.weight) <- set
   gene.set.weight <- as.numeric(weighted.score.type) + (log(1 + (gene.set.weight/median(na.omit(gene.set.weight)))))
  } else if (score.type == "tif") {
   # Topology Influence Factor adapted from Hung et al. PMID:20187943
@@ -42,6 +38,8 @@ GSEA.get.local.network <- function(global.netowrk, set, score.type = "strength",
   tif <- as.numeric(weighted.score.type) + exp(-tif)
   gene.set.weight <- tif
  }
+ gene.set.weight <- gene.set.weight[set]
+ names(gene.set.weight) <- set
  gene.set.weight[is.na(gene.set.weight)] <- as.numeric(weighted.score.type)
  
  return(unname(as.character(gene.set.weight)))

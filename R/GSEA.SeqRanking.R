@@ -201,6 +201,7 @@ GSEA.SeqRanking <- function(A, class.labels, gene.labels, nperm, permutation.typ
       dds <- DESeqDataSetFromMatrix(countData = A, colData = coldata.obs, 
      design = ~condition)
       dds <- DESeq(dds, quiet = TRUE)
+      normCounts <- counts(dds, normalized = TRUE)
       res <- results(dds)
       if (rank.metric == "change") {
      obs.rnk.matrix[, d] <- res[, 2]  #rank by Log2(FC)
@@ -230,6 +231,7 @@ GSEA.SeqRanking <- function(A, class.labels, gene.labels, nperm, permutation.typ
       design = ~condition)
     message("Computing actual gene rankings...")
     dds <- DESeq(dds)
+    normCounts <- counts(dds, normalized = TRUE)
     res <- results(dds)
     if (rank.metric == "change") {
       obs.rnk.matrix[, 1:nperm] <- res[, 2]  #rank by Log2(FC)
@@ -255,11 +257,16 @@ GSEA.SeqRanking <- function(A, class.labels, gene.labels, nperm, permutation.typ
   obs.rnk.matrix <- -obs.rnk.matrix
  }
  
+ if (stage == "permute" && fraction == 1) {
+  norm.A = A
+ }
  if (fraction < 1) {
   for (r in 1:nperm) {
    obs.order.matrix[, r] <- order(obs.rnk.matrix[, r], decreasing = T)
   }
+  norm.A = normCounts
  } else if (fraction == 1) {
+  norm.A = normCounts
   obs.order.matrix[, 1:nperm] <- order(obs.rnk.matrix[, 1], decreasing = T)
  }
  
@@ -269,7 +276,6 @@ GSEA.SeqRanking <- function(A, class.labels, gene.labels, nperm, permutation.typ
  for (r in 1:nperm) {
   order.matrix[, r] <- order(rnk.matrix[, r], decreasing = T)
  }
- 
  return(list(rnk.matrix = rnk.matrix, obs.rnk.matrix = obs.rnk.matrix, order.matrix = order.matrix, 
-  obs.order.matrix = obs.order.matrix))
+  obs.order.matrix = obs.order.matrix, A = norm.A))
 }

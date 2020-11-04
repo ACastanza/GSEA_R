@@ -526,6 +526,9 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
     if (fraction < 1) {
       order.matrix[, n.starts[nk]:n.ends[nk]] <- O$order.matrix
       correl.matrix[, n.starts[nk]:n.ends[nk]] <- O$rnk.matrix
+      if (nk == n.tot) {
+        A <- O$A
+      }
     }
     rm(O)
    }
@@ -535,6 +538,7 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
       rank.metric, progress = n.starts[nk], total = nperm, stage = "rank")
     obs.order.matrix[, 1:nperm] <- O$obs.order.matrix[, 1]
     obs.correl.matrix[, 1:nperm] <- O$obs.rnk.matrix[, 1]
+    A <- O$A
    }
   }
   
