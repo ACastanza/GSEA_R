@@ -153,8 +153,8 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
    write(paste("gene.ann =", gene.ann, sep = " "), file = filename, append = T)
   }
   if (regexpr(pattern = ".gmt", gs.db[1]) == -1) {
-   write(paste('gs.db=', names(gs.db)[1], sep=' '), file=filename, append=T)
-   names(gs.db)<-NULL
+   write(paste("gs.db=", names(gs.db)[1], sep = " "), file = filename, append = T)
+   names(gs.db) <- NULL
   } else {
    write(paste("gs.db =", gs.db, sep = " "), file = filename, append = T)
   }
@@ -527,7 +527,7 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
       order.matrix[, n.starts[nk]:n.ends[nk]] <- O$order.matrix
       correl.matrix[, n.starts[nk]:n.ends[nk]] <- O$rnk.matrix
       if (nk == n.tot) {
-        A <- O$A
+     A <- O$A
       }
     }
     rm(O)
@@ -574,7 +574,8 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
  if (network == TRUE) {
   print(paste("Computing global network weights..."))
   # Produce Global Gene Weighting Network
-  net <- GSEA.get.network("7.2", gene.labels, score.type = score.type, weighted.score.type = weighted.score.type, expression.matrix = A)
+  net <- GSEA.get.network("7.2", gene.labels, score.type = score.type, weighted.score.type = weighted.score.type, 
+   expression.matrix = A)
   net.weights <- net$weights
   net.map <- net$map
   gene.list.weights <- net.weights[gene.labels]
@@ -588,7 +589,8 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
    gene.set <- gs[i, gs[i, ] != "null"]
    
    gs.weight[i, gs[i, ] != "null"] <- GSEA.get.local.network(global.netowrk = net.map, 
-    set = gene.set, score.type = score.type, weighted.score.type = weighted.score.type, expression.matrix = A)
+    set = gene.set, score.type = score.type, weighted.score.type = weighted.score.type, 
+    expression.matrix = A)
   }
  }
  
@@ -741,7 +743,8 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
     if (network == TRUE) {
       shuffled.set <- gene.labels[reshuffled.gene.labels[gene.set2]]
       gene.set.net <- as.numeric(GSEA.get.local.network(global.netowrk = net.map, 
-     set = shuffled.set, score.type = score.type, weighted.score.type = weighted.score.type, expression.matrix = A))
+     set = shuffled.set, score.type = score.type, weighted.score.type = weighted.score.type, 
+     expression.matrix = A))
       if (use.fast.enrichment.routine == F) {
      GSEA.results <- GSEA.Network.EnrichmentScore(gene.list = reshuffled.gene.labels, 
        gene.set = gene.set2, correl.vector = obs.rnk, net.set = gene.set.net, 
