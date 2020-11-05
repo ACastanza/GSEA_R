@@ -151,6 +151,9 @@ GSEA.Analyze.Sets(
 )
 
 if(as.logical(opt$create.zip) == TRUE) {
-files2zip <- dir(outdir, full.names = TRUE)
-zip(zipfile = outdir, files = files2zip)
+  suppressMessages(suppressWarnings(install.packages("zip", repos = "https://cloud.r-project.org/", 
+ quiet = TRUE)))
+ suppressMessages(suppressWarnings(library("zip")))
+ files2zip <- dir(outdir, full.names = TRUE)
+ zip(zipfile = outdir, files = files2zip)
 }
