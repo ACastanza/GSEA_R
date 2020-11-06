@@ -155,5 +155,5 @@ if(as.logical(opt$create.zip) == TRUE) {
  quiet = TRUE)))
  suppressMessages(suppressWarnings(library("zip")))
  files2zip <- dir(outdir, full.names = TRUE)
- zip(zipfile = outdir, files = files2zip)
+ zip(zipfile = paste0(outdir,".zip"), files = files2zip)
 }
