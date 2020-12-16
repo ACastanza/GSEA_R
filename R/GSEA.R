@@ -260,7 +260,7 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
    dataset <- collapseddataset
   }
   
-  if (rank.metric == "change" | rank.metric == "signedsig" | rank.metric == 
+  if (rank.metric == "change" | rank.metric == "wald" |rank.metric == "signedsig" | rank.metric == 
    "scaledchange") {
    print(c("Performing Low Count Filtering (Preprocessing Dataset for DESeq2)"))
    dataset <- subset(dataset, rowSums(dataset[]) >= 10)
@@ -508,7 +508,7 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
     rm(O)
    }
   }
-  if (rank.metric == "change" | rank.metric == "signedsig" | rank.metric == 
+  if (rank.metric == "change" | rank.metric == "wald" |rank.metric == "signedsig" | rank.metric == 
    "scaledchange") {
    for (nk in 1:n.tot) {
     call.nperm <- n.perms[nk]
@@ -1194,6 +1194,11 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
     main = "Gene List Correlation (Log2(FC)) Profile", type = "l", lwd = 2, 
     cex = 0.9, col = 1)
   }
+  if (rank.metric == "wald") {
+   x <- plot(location, obs.rnk, ylab = "DESeq2 Wald Statistic", xlab = "Gene List Location", 
+    main = "Gene List Correlation (Wald) Profile", type = "l", lwd = 2, 
+    cex = 0.9, col = 1)
+  }
   if (rank.metric == "scaledchange") {
    x <- plot(location, obs.rnk, ylab = "DESeq2 Log2(FC)", xlab = "Gene List Location", 
     main = "Gene List Correlation (P-Scaled Log2(FC)) Profile", type = "l", 
@@ -1470,6 +1475,10 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
       if (rank.metric == "change") {
      names(gene.report) <- c("#", "GENE SYMBOL", "DESC", "LIST LOC", 
        "DESeq2 Log2(FC)", "RES", "CORE_ENRICHMENT")
+      }
+      if (rank.metric == "wald") {
+     names(gene.report) <- c("#", "GENE SYMBOL", "DESC", "LIST LOC", 
+       "DESeq2 Wald", "RES", "CORE_ENRICHMENT")
       }
       if (rank.metric == "scaledchange") {
      names(gene.report) <- c("#", "GENE SYMBOL", "DESC", "LIST LOC", 
