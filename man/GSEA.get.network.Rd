@@ -4,7 +4,13 @@
 \alias{GSEA.get.network}
 \title{Constructs a gene weight network from HumanNet v2}
 \usage{
-GSEA.get.network(msigdbversion, gene.labels, score.type = "strength")
+GSEA.get.network(
+  msigdbversion,
+  gene.labels,
+  score.type = "strength",
+  weighted.score.type,
+  expression.matrix = NULL
+)
 }
 \description{
 `GSEA.get.network` constructs a network weight table for all genes

@@ -4,7 +4,13 @@
 \alias{GSEA.get.local.network}
 \title{Constructs a gene weight network from HumanNet v2 for a gene set}
 \usage{
-GSEA.get.local.network(global.netowrk, set, score.type = "strength")
+GSEA.get.local.network(
+  global.netowrk,
+  set,
+  score.type = "strength",
+  weighted.score.type,
+  expression.matrix = NULL
+)
 }
 \description{
 `GSEA.get.local.network` constructs a network weight table for the genes in a gene set

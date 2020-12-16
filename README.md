@@ -11,6 +11,7 @@ GSEA-R v1.2 contains a preliminary implementation of GSEA-preranked. This implem
 GSEA-R v1.3 contains experimental methods for performing GSEA on an RNA-seq raw counts matrix, and constructing the null distribution of random dataset permutations using DESeq2. <br>
 Three options are available for ranking genes using DESeq2 metrics: <br>
 Log2(FC) (rank.metric == change)<br>
+Wald Statistic (rank.metric == wald)<br>
 -log10(pValue)\*Sign of the Log2(FC) (rank.metric == signedsig)<br>
 Log2(FC)\*-log10(pValue) (rank.metric == scaledchange)<br>
 <b>Warning: These methods are extremely slow.</b>
