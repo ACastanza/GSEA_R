@@ -14,8 +14,9 @@ GSEA.get.local.network <- function(global.network, set, score.type = "strength",
 # gene.set.map <- merge(x = global.network, y = gene.set.frame, by.x = 2, by.y = 1)
 # gene.set.map <- merge(x = gene.set.map, y = gene.set.frame, by.x = 2, by.y = 1)
 # gene.set.graph <- graph_from_data_frame(gene.set.map, directed = FALSE)
+
  global_graph <- graph_from_data_frame(global.network, directed = FALSE)
- gene.set.graph <- induced.subgraph(graph=net_graph,vids=set)
+ gene.set.graph <- induced.subgraph(graph=global_graph,vids=set[set %in% V(global_graph)$name])
 
  if (score.type == "strength") {
   gene.set.weight <- strength(gene.set.graph)
