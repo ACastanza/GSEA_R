@@ -10,10 +10,13 @@
 GSEA.get.local.network <- function(global.network, set, score.type = "strength", 
  weighted.score.type, expression.matrix = NULL) {
  
- gene.set.frame <- as.data.frame(set, stringsAsFactors = FALSE)
- gene.set.map <- merge(x = global.network, y = gene.set.frame, by.x = 2, by.y = 1)
- gene.set.map <- merge(x = gene.set.map, y = gene.set.frame, by.x = 2, by.y = 1)
- gene.set.graph <- graph_from_data_frame(gene.set.map, directed = FALSE)
+# gene.set.frame <- as.data.frame(set, stringsAsFactors = FALSE)
+# gene.set.map <- merge(x = global.network, y = gene.set.frame, by.x = 2, by.y = 1)
+# gene.set.map <- merge(x = gene.set.map, y = gene.set.frame, by.x = 2, by.y = 1)
+# gene.set.graph <- graph_from_data_frame(gene.set.map, directed = FALSE)
+ global_graph <- graph_from_data_frame(global.network, directed = FALSE)
+ gene.set.graph <- induced.subgraph(graph=net_graph,vids=set)
+
  if (score.type == "strength") {
   gene.set.weight <- strength(gene.set.graph)
   gene.set.weight <- as.numeric(weighted.score.type) + (log(1 + (gene.set.weight/median(na.omit(gene.set.weight)))))
