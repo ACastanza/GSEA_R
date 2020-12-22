@@ -7,11 +7,11 @@
 #' @keywords internal
 #'
 
-GSEA.get.local.network <- function(global.netowrk, set, score.type = "strength", 
+GSEA.get.local.network <- function(global.network, set, score.type = "strength", 
  weighted.score.type, expression.matrix = NULL) {
  
  gene.set.frame <- as.data.frame(set, stringsAsFactors = FALSE)
- gene.set.map <- merge(x = global.netowrk, y = gene.set.frame, by.x = 2, by.y = 1)
+ gene.set.map <- merge(x = global.network, y = gene.set.frame, by.x = 2, by.y = 1)
  gene.set.map <- merge(x = gene.set.map, y = gene.set.frame, by.x = 2, by.y = 1)
  gene.set.graph <- graph_from_data_frame(gene.set.map, directed = FALSE)
  if (score.type == "strength") {

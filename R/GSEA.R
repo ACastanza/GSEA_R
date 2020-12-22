@@ -589,7 +589,7 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
     sep = " "))
    gene.set <- gs[i, gs[i, ] != "null"]
    
-   gs.weight[i, gs[i, ] != "null"] <- GSEA.get.local.network(global.netowrk = net.map, 
+   gs.weight[i, gs[i, ] != "null"] <- GSEA.get.local.network(global.network = net.map, 
     set = gene.set, score.type = score.type, weighted.score.type = weighted.score.type, 
     expression.matrix = A)
   }
@@ -743,7 +743,7 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
     reshuffled.gene.labels <- sample(1:rows)
     if (network == TRUE) {
       shuffled.set <- gene.labels[reshuffled.gene.labels[gene.set2]]
-      gene.set.net <- as.numeric(GSEA.get.local.network(global.netowrk = net.map, 
+      gene.set.net <- as.numeric(GSEA.get.local.network(global.network = net.map, 
      set = shuffled.set, score.type = score.type, weighted.score.type = weighted.score.type, 
      expression.matrix = A))
       if (use.fast.enrichment.routine == F) {
