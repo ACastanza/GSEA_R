@@ -49,6 +49,26 @@ GSEA.get.network <- function(msigdbversion, gene.labels, score.type = "strength"
    mean(x[y], na.rm = TRUE) else NA, f, valid))
   tif <- as.numeric(weighted.score.type) + exp(-tif)
   net_weight <- tif
+ } else if (score.type == "stif") {
+  # Topology Influence Factor adapted from Hung et al. PMID:20187943
+  # Modified to use spearman instead of pearson correlation for determining mutual influence
+  d <- distances(gene.set.graph)
+  set.expression.matrix <- expression.matrix[rownames(d), ]
+  if (length(set.expression.matrix) > 0) {
+   pcc <- stats::cor(t(set.expression.matrix), method = "spearman")#, use = "pairwise.complete.obs")
+   d <- d[rownames(pcc), rownames(pcc)]
+   f <- d/abs(pcc)
+   diag(f) <- NA
+   valid <- f <= -log(0.05)
+   f <- as.data.frame(t(f))
+   valid <- as.data.frame(t(valid))
+   tif <- unlist(Map(function(x, y) if (sum(y, na.rm = TRUE) > 0) 
+    mean(x[y], na.rm = TRUE) else NA, f, valid))
+   tif <- as.numeric(weighted.score.type) + exp(-tif)
+   gene.set.weight <- tif
+  } else {
+   gene.set.weight <- rep(as.numeric(weighted.score.type), length(set))
+  }
  }
  
  return(list(weights = net_weight, map = net_map))
