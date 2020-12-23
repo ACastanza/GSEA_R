@@ -117,7 +117,7 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
  gs.size.threshold.max = 500, reverse.sign = F, preproc.type = 0, random.seed = as.integer(Sys.time()), 
  perm.type = 0, fraction = 1, replace = F, collapse.dataset = FALSE, collapse.mode = "NOCOLLAPSE", 
  save.intermediate.results = F, use.fast.enrichment.routine = T, gsea.type = "GSEA", 
- rank.metric = "S2N", network = TRUE, msigdbversion = "7.2", score.type = "strength") {
+ rank.metric = "S2N", network = TRUE, msigdbversion = "7.2", score.type = "strength", gs.decompose = FALSE) {
  
  print(" *** Running Gene Set Enrichment Analysis...")
  
@@ -388,6 +388,33 @@ GSEA <- function(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.d
  gs.desc <- temp.desc[1:Ng]
  size.G <- temp.size.G[1:Ng]
  
+ if (gs.decompose == TRUE) {
+ print("Decomposing input gene set database into subnetworks...")
+
+ decomp.db <- GSEA.decompose.gs(gsdb = gs, gs.names = gs.names, gs.desc = gs.desc, gene.labels = gene.labels, gs.size.threshold.min, msigdbversion)
+
+ max.Ng.decomp <- length(decomp.db$gs)
+ size.G.decomp <- lengths(decomp.db$gs)
+ max.size.G.decomp <- max(size.G.decomp)
+ min.size.G.decomp <- min(size.G.decomp)
+
+gs2 <- matrix(rep("null", max.Ng.decomp * max.size.G.decomp), nrow = max.Ng.decomp, ncol = max.size.G.decomp)
+for (i in 1:max.Ng.decomp) {
+gs2[i,] <- c(names(decomp.db$gs[[i]]), rep("null", max.size.G.decomp - 
+ length(decomp.db$gs[[i]])))
+}
+
+# Overwrite parsed input gene set database with decomposed database
+gs <- gs2
+gs.names <- decomp.db$names
+gs.desc <- decomp.db$desc
+Ng <- max.Ng.decomp
+size.G <- size.G.decomp
+max.size.G <- max.size.G.decomp
+min.size.G <- min.size.G.decomp
+
+}
+
  N <- length(A[, 1])
  Ns <- length(A[1, ])
  
