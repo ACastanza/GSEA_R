@@ -5,7 +5,7 @@
 \title{Constructs a gene weight network from HumanNet v2 for a gene set}
 \usage{
 GSEA.get.local.network(
-  global.netowrk,
+  global.network,
   set,
   score.type = "strength",
   weighted.score.type,

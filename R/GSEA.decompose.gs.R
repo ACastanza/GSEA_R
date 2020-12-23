@@ -1,7 +1,7 @@
-#' Constructs a gene weight network from HumanNet v2 for a gene set
+#' Constructs a gene weight network from HumanNet v2 for a gene #' set and uses this network to decompose the gene set into 
+#' subnetworks
 #'
-#' `GSEA.decompose.gs` extracts subnetworks from gene sets to perform more 
-#' granular subgraph level enrichment analysis
+#' `GSEA.decompose.gs` extracts subnetworks from gene sets to perform more granular subgraph level enrichment analysis
 #'
 #' Internal `GSEA` function.
 #'

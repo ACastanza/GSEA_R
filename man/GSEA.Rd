@@ -37,7 +37,8 @@ GSEA(
   rank.metric = "S2N",
   network = TRUE,
   msigdbversion = "7.2",
-  score.type = "strength"
+  score.type = "strength",
+  gs.decompose = FALSE
 )
 }
 \arguments{
