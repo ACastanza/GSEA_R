@@ -4,8 +4,14 @@
 \alias{GSEA.Analyze.Sets}
 \title{Performs leading edge analysis of a GSEA result}
 \usage{
-GSEA.Analyze.Sets(directory = getwd(), topgs = 20, height = 16,
-  width = 16, gsea.type = "GSEA", doc.string = "gsea_result")
+GSEA.Analyze.Sets(
+  directory = getwd(),
+  topgs = 20,
+  height = 16,
+  width = 16,
+  gsea.type = "GSEA",
+  doc.string = "gsea_result"
+)
 }
 \arguments{
 \item{directory}{The directory containing GSEA result files}

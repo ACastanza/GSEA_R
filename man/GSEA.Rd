@@ -4,18 +4,42 @@
 \alias{GSEA}
 \title{Run Gene Set enrichment Analysis}
 \usage{
-GSEA(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.db,
-  gs.ann = "", output.directory = getwd(),
-  doc.string = "gsea_result", reshuffling.type = "sample.labels",
-  nperm = 1000, weighted.score.type = 1, nom.p.val.threshold = -1,
-  fwer.p.val.threshold = -1, fdr.q.val.threshold = 0.25, topgs = 20,
-  adjust.FDR.q.val = F, gs.size.threshold.min = 15,
-  gs.size.threshold.max = 500, reverse.sign = F, preproc.type = 0,
-  random.seed = as.integer(Sys.time()), perm.type = 0, fraction = 1,
-  replace = F, collapse.dataset = FALSE,
-  collapse.mode = "NOCOLLAPSE", save.intermediate.results = F,
-  use.fast.enrichment.routine = T, gsea.type = "GSEA",
-  rank.metric = "S2N")
+GSEA(
+  input.ds,
+  input.cls,
+  input.chip = "NOCHIP",
+  gene.ann = "",
+  gs.db,
+  gs.ann = "",
+  output.directory = getwd(),
+  doc.string = "gsea_result",
+  reshuffling.type = "sample.labels",
+  nperm = 1000,
+  weighted.score.type = 1,
+  nom.p.val.threshold = -1,
+  fwer.p.val.threshold = -1,
+  fdr.q.val.threshold = 0.25,
+  topgs = 20,
+  adjust.FDR.q.val = F,
+  gs.size.threshold.min = 15,
+  gs.size.threshold.max = 500,
+  reverse.sign = F,
+  preproc.type = 0,
+  random.seed = as.integer(Sys.time()),
+  perm.type = 0,
+  fraction = 1,
+  replace = F,
+  collapse.dataset = FALSE,
+  collapse.mode = "NOCOLLAPSE",
+  save.intermediate.results = F,
+  use.fast.enrichment.routine = T,
+  gsea.type = "GSEA",
+  rank.metric = "S2N",
+  network = TRUE,
+  msigdbversion = "7.2",
+  score.type = "strength",
+  gs.decompose = FALSE
+)
 }
 \arguments{
 \item{input.ds}{Input gene expression dataset file in GCT format or RNK format if preranked is specified to gsea.type}
@@ -78,6 +102,14 @@ GSEA(input.ds, input.cls, input.chip = "NOCHIP", gene.ann = "", gs.db,
 \item{gsea.type}{Mode to run GSEA. Specify either 'GSEA' for standard mode, or 'preranked' to allow parsing of .RNK file}
 
 \item{rank.metric}{Method for ranking genes. Accepts either signal-to-noise ratio 'S2N' or 'ttest' (default: S2N)}
+
+\item{network}{Use Network weight enhanced Enrichment Score Calcualtions 'TRUE' or 'FALSE' (default: TRUE)}
+
+\item{msigdbversion}{Version of MSigDB to use for annotating the gene symbols in the HumanNetv2 derived network 
+graph (default: 7.2)}
+
+\item{score.type}{method for calcualting the per-gene weighting factors for the gene networks, only strength 
+is currently supported (default: strength)}
 }
 \value{
 The results of the method are stored in the
@@ -142,9 +174,9 @@ genes.  For details see Subramanian et al 2005.
 \examples{
 GSEA(input.ds = system.file('extdata', 'Leukemia_hgu95av2.gct', package = 'GSEA', mustWork = TRUE),
 input.cls = system.file('extdata', 'Leukemia.cls', package = 'GSEA', mustWork = TRUE),
-input.chip = system.file('extdata', 'Human_AFFY_HG_U95_MSigDB.v7.1.chip',
+input.chip = system.file('extdata', 'Human_AFFY_HG_U95_MSigDB_7_0_final.chip',
 package = 'GSEA', mustWork = TRUE), gs.db = system.file('extdata',
-'h.all.v7.1.symbols.gmt', package = 'GSEA', mustWork = TRUE),
+'h.all.v7.0.symbols.gmt', package = 'GSEA', mustWork = TRUE),
 collapse.dataset = TRUE, collapse.mode = 'max')
 
 }

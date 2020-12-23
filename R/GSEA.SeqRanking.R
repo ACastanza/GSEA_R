@@ -31,15 +31,15 @@
 #' (default: 1.0) replace: Resampling mode (replacement or not replacement). For
 #' experts only (default: F) reverse.sign: Reverse direction of gene list (default
 #' = F) rank.metric: metric to use for ranking genes, supports 'change' which ranks 
-#' by the DESeq2 computed Log2(FC), 'signedsig' which ranks by the  * the Sign of 
-#' the Log2(FC), and 'scaledchange' which ranks by the DESeq2 computed 
-#' Log2(FC)*-log10(DESeq2 pValue), Outputs: rnk.matrix: Matrix with 
-#' random permuted or bootstraps rank metrics signal to noise ratios by default 
-#' (rows are genes, columns are permutations or bootstrap subsamplings 
-#' obs.rnk.matrix: Matrix with observed rank metrics (rows are genes, columns 
-#' are boostraps subsamplings. If fraction is set to 1.0 then all the columns 
-#' have the same values order.matrix: Matrix with the orderings that will sort 
-#' the columns of the obs.rnk.matrix in decreasing rnk order obs.order.matrix: 
+#' by the DESeq2 computed Log2(FC), 'wald' which ranks by the DESeq2 wald statistic,
+#' 'signedsig' which ranks by the  * the Sign of the Log2(FC), and 'scaledchange' 
+#' which ranks by the DESeq2 computed Log2(FC)*-log10(DESeq2 pValue), Outputs: 
+#' rnk.matrix: Matrix with random permuted or bootstraps rank metrics signal to 
+#' noise ratios by default (rows are genes, columns are permutations or bootstrap 
+#' subsamplings obs.rnk.matrix: Matrix with observed rank metrics (rows are genes, 
+#' columns are boostraps subsamplings. If fraction is set to 1.0 then all the 
+#' columns have the same values order.matrix: Matrix with the orderings that will 
+#' sort the columns of the obs.rnk.matrix in decreasing rnk order obs.order.matrix: 
 #' Matrix with the orderings that will sort the columns of the rnk.matrix in 
 #' decreasing rnk order.
 #'
@@ -157,7 +157,6 @@ GSEA.SeqRanking <- function(A, class.labels, gene.labels, nperm, permutation.typ
   }
  }
  
- if (rank.metric == "change" | rank.metric == "signedsig" | rank.metric == "scaledchange") {
   library(DESeq2)
   coldata <- as.data.frame(colnames(A), stringsAsFactors = FALSE)
   rownames(coldata) <- coldata[, 1]
@@ -181,6 +180,9 @@ GSEA.SeqRanking <- function(A, class.labels, gene.labels, nperm, permutation.typ
     if (rank.metric == "change") {
       rnk.matrix[, d] <- res[, 2]  #rank by Log2(FC)
     }
+    if (rank.metric == "wald") {
+      rnk.matrix[, d] <- res[, 4]  #rank by Log2(FC)
+    }
     if (rank.metric == "scaledchange") {
       rnk.matrix[, d] <- res[, 2] * -log10(res[, 5])  #rank by Log2(FC)*-log10(pValue)
     }
@@ -201,9 +203,13 @@ GSEA.SeqRanking <- function(A, class.labels, gene.labels, nperm, permutation.typ
       dds <- DESeqDataSetFromMatrix(countData = A, colData = coldata.obs, 
      design = ~condition)
       dds <- DESeq(dds, quiet = TRUE)
+      normCounts <- counts(dds, normalized = TRUE)
       res <- results(dds)
       if (rank.metric == "change") {
      obs.rnk.matrix[, d] <- res[, 2]  #rank by Log2(FC)
+      }
+      if (rank.metric == "wald") {
+     obs.rnk.matrix[, d] <- res[, 4]  #rank by Log2(FC)
       }
       if (rank.metric == "scaledchange") {
      obs.rnk.matrix[, d] <- res[, 2] * -log10(res[, 5])  #rank by Log2(FC)*-log10(pValue)
@@ -230,9 +236,13 @@ GSEA.SeqRanking <- function(A, class.labels, gene.labels, nperm, permutation.typ
       design = ~condition)
     message("Computing actual gene rankings...")
     dds <- DESeq(dds)
+    normCounts <- counts(dds, normalized = TRUE)
     res <- results(dds)
     if (rank.metric == "change") {
       obs.rnk.matrix[, 1:nperm] <- res[, 2]  #rank by Log2(FC)
+    }
+    if (rank.metric == "wald") {
+      obs.rnk.matrix[, 1:nperm] <- res[, 4]  #rank by Log2(FC)
     }
     if (rank.metric == "scaledchange") {
       obs.rnk.matrix[, 1:nperm] <- res[, 2] * -log10(res[, 5])  #rank by Log2(FC)*-log10(pValue)
@@ -248,18 +258,23 @@ GSEA.SeqRanking <- function(A, class.labels, gene.labels, nperm, permutation.typ
     }
    }
   }
- }
+
  
  
  if (reverse.sign == T) {
   obs.rnk.matrix <- -obs.rnk.matrix
  }
  
+ if (stage == "permute" && fraction == 1) {
+  norm.A = A
+ }
  if (fraction < 1) {
   for (r in 1:nperm) {
    obs.order.matrix[, r] <- order(obs.rnk.matrix[, r], decreasing = T)
   }
+  norm.A = normCounts
  } else if (fraction == 1) {
+  norm.A = normCounts
   obs.order.matrix[, 1:nperm] <- order(obs.rnk.matrix[, 1], decreasing = T)
  }
  
@@ -269,7 +284,6 @@ GSEA.SeqRanking <- function(A, class.labels, gene.labels, nperm, permutation.typ
  for (r in 1:nperm) {
   order.matrix[, r] <- order(rnk.matrix[, r], decreasing = T)
  }
- 
  return(list(rnk.matrix = rnk.matrix, obs.rnk.matrix = obs.rnk.matrix, order.matrix = order.matrix, 
-  obs.order.matrix = obs.order.matrix))
+  obs.order.matrix = obs.order.matrix, A = norm.A))
 }

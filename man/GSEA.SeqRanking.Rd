@@ -4,10 +4,20 @@
 \alias{GSEA.SeqRanking}
 \title{Ranks genes according to the specified ranking metric}
 \usage{
-GSEA.SeqRanking(A, class.labels, gene.labels, nperm,
-  permutation.type = 0, sigma.correction = "GeneCluster",
-  fraction = 1, replace = F, reverse.sign = F, rank.metric,
-  progress, total)
+GSEA.SeqRanking(
+  A,
+  class.labels,
+  gene.labels,
+  nperm,
+  permutation.type = 0,
+  fraction = 1,
+  replace = F,
+  reverse.sign = F,
+  rank.metric,
+  progress,
+  total,
+  stage
+)
 }
 \description{
 `GSEA.SeqRanking` computes the GSEA ranking metric for each gene in the gene raw counts matrix using DESeq2
@@ -42,15 +52,15 @@ fraction: Subsampling fraction. Set to 1.0 (no resampling). For experts only
 (default: 1.0) replace: Resampling mode (replacement or not replacement). For
 experts only (default: F) reverse.sign: Reverse direction of gene list (default
 = F) rank.metric: metric to use for ranking genes, supports 'change' which ranks 
-by the DESeq2 computed Log2(FC), 'signedsig' which ranks by the  * the Sign of 
-the Log2(FC), and 'scaledchange' which ranks by the DESeq2 computed 
-Log2(FC)*-log10(DESeq2 pValue), Outputs: rnk.matrix: Matrix with 
-random permuted or bootstraps rank metrics signal to noise ratios by default 
-(rows are genes, columns are permutations or bootstrap subsamplings 
-obs.rnk.matrix: Matrix with observed rank metrics (rows are genes, columns 
-are boostraps subsamplings. If fraction is set to 1.0 then all the columns 
-have the same values order.matrix: Matrix with the orderings that will sort 
-the columns of the obs.rnk.matrix in decreasing rnk order obs.order.matrix: 
+by the DESeq2 computed Log2(FC), 'wald' which ranks by the DESeq2 wald statistic,
+'signedsig' which ranks by the  * the Sign of the Log2(FC), and 'scaledchange' 
+which ranks by the DESeq2 computed Log2(FC)*-log10(DESeq2 pValue), Outputs: 
+rnk.matrix: Matrix with random permuted or bootstraps rank metrics signal to 
+noise ratios by default (rows are genes, columns are permutations or bootstrap 
+subsamplings obs.rnk.matrix: Matrix with observed rank metrics (rows are genes, 
+columns are boostraps subsamplings. If fraction is set to 1.0 then all the 
+columns have the same values order.matrix: Matrix with the orderings that will 
+sort the columns of the obs.rnk.matrix in decreasing rnk order obs.order.matrix: 
 Matrix with the orderings that will sort the columns of the rnk.matrix in 
 decreasing rnk order.
 }

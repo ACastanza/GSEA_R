@@ -4,8 +4,16 @@
 \alias{GSEA.HeatMapPlot2}
 \title{Produces overlap heatmap for leading edge analysis}
 \usage{
-GSEA.HeatMapPlot2(V, row.names = "NA", col.names = "NA", main = " ",
-  sub = " ", xlab = " ", ylab = " ", color.map = "default")
+GSEA.HeatMapPlot2(
+  V,
+  row.names = "NA",
+  col.names = "NA",
+  main = " ",
+  sub = " ",
+  xlab = " ",
+  ylab = " ",
+  color.map = "default"
+)
 }
 \description{
 `GSEA.HeatMapPlot2` plots a heatmap of a gene set leading edge overlap matrix

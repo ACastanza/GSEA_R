@@ -1,5 +1,5 @@
-# GSEA 1.2 -- Gene Set Enrichment Analysis / Broad Institute Executable R
-# script to run GSEA Analysis
+# GSEA 2.0 -- Gene Set Enrichment Analysis / Broad Institute Executable R script
+# to run GSEA Analysis
 library("utils")
 library("tools")
 library("dplyr")
@@ -70,43 +70,43 @@ if (mindefault == FALSE & !is.na(mindefault)) {
 }
 
 if (file_ext(inputds) != "rnk") {
-
-rankmath <- menu(c("S2N (DEFAULT)", "T-Test", "DESeq2: Log2(FC) (RAW COUNTS ONLY)", "DESeq2: -log10(pValue) signed by the Log2(FC) (RAW COUNTS ONLY)", "DESeq2: Log2(FC)*-log10(pValue) (RAW COUNTS ONLY)"), 
- graphics = FALSE, title = "Collapsing mode for probe sets => 1 gene")
-if (rankmath == 1) {
- rankmetric <- "S2N"
-} else if (rankmath == 2) {
- rankmetric <- "ttest"
-} else if (rankmath == 3) {
- rankmetric <- "change"
-} else if (rankmath == 4) {
- rankmetric <- "signedsig"
-} else if (rankmath == 5) {
- rankmetric <- "scaledchange"
-} else {
- cat("No other ranking metrics implemented. Defaulting to S2N.\n")
- rankmetric <- "S2N"
+ 
+ rankmath <- menu(c("S2N (DEFAULT)", "T-Test", "DESeq2: Log2(FC) (RAW COUNTS ONLY)", 
+  "DESeq2: -log10(pValue) signed by the Log2(FC) (RAW COUNTS ONLY)", "DESeq2: Log2(FC)*-log10(pValue) (RAW COUNTS ONLY)"), 
+  graphics = FALSE, title = "Collapsing mode for probe sets => 1 gene")
+ if (rankmath == 1) {
+  rankmetric <- "S2N"
+ } else if (rankmath == 2) {
+  rankmetric <- "ttest"
+ } else if (rankmath == 3) {
+  rankmetric <- "change"
+ } else if (rankmath == 4) {
+  rankmetric <- "signedsig"
+ } else if (rankmath == 5) {
+  rankmetric <- "scaledchange"
+ } else {
+  cat("No other ranking metrics implemented. Defaulting to S2N.\n")
+  rankmetric <- "S2N"
+ }
+ 
+ # cat('\n') use.s2n <- askYesNo('Use default Signal2Noise metric for ranking
+ # genes? ') if (use.s2n == TRUE & !is.na(use.s2n)) { rankmetric <- 'S2N' } else
+ # if (use.s2n == FALSE) { use.ttest <- askYesNo('Use T-Test to rank genes? ') if
+ # (use.ttest == TRUE & !is.na(use.ttest)) { rankmetric <- 'ttest' } else if
+ # (use.ttest == FALSE) { use.seq <- askYesNo('Use DESeq2 to calculate Log2(FC) to
+ # rank genes? ') if (use.seq == TRUE & !is.na(use.seq)) { rankmetric <- 'seq' } }
+ # else { cat('No other ranking metrics implemented. Defaulting to S2N.\n')
+ # rankmetric <- 'S2N' } }
 }
 
- # cat("\n")
- # use.s2n <- askYesNo("Use default Signal2Noise metric for ranking genes? ")
- # if (use.s2n == TRUE & !is.na(use.s2n)) {
- #  rankmetric <- "S2N"
- # } else if (use.s2n == FALSE) {
- #  use.ttest <- askYesNo("Use T-Test to rank genes? ")
- #  if (use.ttest == TRUE & !is.na(use.ttest)) {
- #   rankmetric <- "ttest"
- #  } else if (use.ttest == FALSE) {
- #   use.seq <- askYesNo("Use DESeq2 to calculate Log2(FC) to rank genes? ")
- #   if (use.seq == TRUE & !is.na(use.seq)) {
- #    rankmetric <- "seq"
- #   }
- #  } else {
- #   cat("No other ranking metrics implemented. Defaulting to S2N.\n")
- #   rankmetric <- "S2N"
- #  }
- # }
-}
+cat("\n")
+
+usenetwork <- askYesNo("Use Network Weighted Ranking? ")
+
+# if (usenetwork == TRUE) { nettype <- menu(c('Strength', 'Eigen Centrality'),
+# graphics = FALSE, title = 'Weight Metric for Network Score') if (nettype == 1)
+# { scoretype <- 'strength' } else if (nettype == 2) { scoretype <- 'centrality'
+# } }
 
 cat("\n")
 
@@ -157,8 +157,11 @@ GSEA(
  save.intermediate.results = F,           # For experts only, save intermediate results (e.g. matrix of random perm. scores) (default: F)
  use.fast.enrichment.routine = T,         # Use faster routine to compute enrichment for random permutations (default: T)
  gsea.type = rankmethod,                     # Select Standard GSEA (default) or preranked
- rank.metric = rankmetric
-)
+ rank.metric = rankmetric,
+ network = usenetwork,
+ # score.type = scoretype,
+ msigdbversion = "7.2"
+ )
 #----------------------------------------------------------------------------------------------------------
 
 # Overlap and leading gene subset assignment analysis of the GSEA results

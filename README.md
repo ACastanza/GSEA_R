@@ -1,4 +1,4 @@
-# GSEA R Implementation v1.3
+# GSEA R Implementation v2.0
 ## Revisions to the GSEA-P R Application (Subramanian and Tamayo et al 2005)
 
 Preliminary revisions to the original GSEA implementation in R to enable it to run on modern R distributions.
@@ -8,12 +8,15 @@ Additionally, a rudimentary Collapse dataset function has been backported from t
 
 GSEA-R v1.2 contains a preliminary implementation of GSEA-preranked. This implementation has not been thoroughly tested and is reliant on undocumented gene set permutation code.
 
-GSEA-R v1.3 contains experimental methods for eprforming GSEA on an RNA-seq raw counts matrix, and constructing the null distribution of random dataset permutations using DESeq2. <br>
+GSEA-R v1.3 contains experimental methods for performing GSEA on an RNA-seq raw counts matrix, and constructing the null distribution of random dataset permutations using DESeq2. <br>
 Three options are available for ranking genes using DESeq2 metrics: <br>
 Log2(FC) (rank.metric == change)<br>
+Wald Statistic (rank.metric == wald)<br>
 -log10(pValue)\*Sign of the Log2(FC) (rank.metric == signedsig)<br>
 Log2(FC)\*-log10(pValue) (rank.metric == scaledchange)<br>
 <b>Warning: These methods are extremely slow.</b>
+
+GSEA-R v2.0 contains a method for performing an highly experimental network-weighted GSEA. Traditional GSEA weights each step of the enrihcment score calculation by the ranking metric of the gene at that step. This network-weighted method (nwGSEA) modifies the Enrichment Score calculation such that each step is weighted by both the ranking metric, as well as the (log-scaled) connectivity for each gene. For genes in the set, the gene's connectivity for a local network constructed from just the genes in the set normalized by the median connectivity of the set is used. For genes not in the set the gene's connectivity in the global global network normalized by the global median connectivity is used.  <br>
 
 The collapse dataset feature requires the <tt>dplyr</tt> package from <tt>tidyverse</tt>
 
