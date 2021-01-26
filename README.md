@@ -16,7 +16,7 @@ Wald Statistic (rank.metric == wald)<br>
 Log2(FC)\*-log10(pValue) (rank.metric == scaledchange)<br>
 <b>Warning: These methods are extremely slow.</b>
 
-GSEA-R v2.0 contains a method for performing an highly experimental network-weighted GSEA. Traditional GSEA weights each step of the enrihcment score calculation by the ranking metric of the gene at that step. This network-weighted method (nwGSEA) modifies the Enrichment Score calculation such that each step is weighted by both the ranking metric, as well as the (log-scaled) connectivity for each gene. For genes in the set, the gene's connectivity for a local network constructed from just the genes in the set normalized by the median connectivity of the set is used. For genes not in the set the gene's connectivity in the global global network normalized by the global median connectivity is used.  <br>
+GSEA-R v2.0 contains a method for performing an highly experimental network-weighted GSEA. Traditional GSEA weights each step of the enrihcment score calculation by the ranking metric of the gene at that step. This network-weighted method (nwGSEA) modifies the Enrichment Score calculation such that each step is weighted by both the ranking metric, as well as the (log-scaled) connectivity for each gene. For genes in the set, the gene's connectivity for a local network constructed from just the genes in the set normalized by the median connectivity of the set is used. <br>
 
 The collapse dataset feature requires the <tt>dplyr</tt> package from <tt>tidyverse</tt>
 
