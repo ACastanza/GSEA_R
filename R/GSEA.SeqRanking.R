@@ -181,7 +181,7 @@ GSEA.SeqRanking <- function(A, class.labels, gene.labels, nperm, permutation.typ
       rnk.matrix[, d] <- res[, 2]  #rank by Log2(FC)
     }
     if (rank.metric == "wald") {
-      rnk.matrix[, d] <- res[, 4]  #rank by Log2(FC)
+      rnk.matrix[, d] <- res[, 4]  #rank by Wald statistic
     }
     if (rank.metric == "scaledchange") {
       rnk.matrix[, d] <- res[, 2] * -log10(res[, 5])  #rank by Log2(FC)*-log10(pValue)
@@ -209,7 +209,7 @@ GSEA.SeqRanking <- function(A, class.labels, gene.labels, nperm, permutation.typ
      obs.rnk.matrix[, d] <- res[, 2]  #rank by Log2(FC)
       }
       if (rank.metric == "wald") {
-     obs.rnk.matrix[, d] <- res[, 4]  #rank by Log2(FC)
+     obs.rnk.matrix[, d] <- res[, 4]  #rank by Wald statistic
       }
       if (rank.metric == "scaledchange") {
      obs.rnk.matrix[, d] <- res[, 2] * -log10(res[, 5])  #rank by Log2(FC)*-log10(pValue)
