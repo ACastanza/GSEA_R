@@ -9,7 +9,7 @@
 
 GSEA.ReadCHIPFile <-
 function(file = "NULL") {
-chipframe <- read.table(file, sep = "\t", comment.char = "", quote = "", stringsAsFactors = FALSE,
-  fill = TRUE, header = T)
+chipframe <- read.table(file, header = T, 
+stringsAsFactors = FALSE, sep = "\t", fill = TRUE, quote = "", na = "", comment.char="")
 return(chipframe)
 }
