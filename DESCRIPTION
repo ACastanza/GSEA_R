@@ -1,7 +1,7 @@
 Package: GSEA
 Type: Package
 Title: Gene Set Enrichment Analysis (GSEA)
-Version: 2.0
+Version: 1.4
 Date: 2020-10-20
 Authors@R: c(person("Aravind", "Subramanian", role="aut"), person("Pablo", "Tamayo", role="aut"), person("Anthony", "Castanza", email="acastanza@ucsd.edu", role = c("aut", "cre")))
 Depends: R (>= 3.6.0), dplyr (>= 0.8.3), igraph (>= 1.2.5), DESeq2 (>= 1.22.0)
